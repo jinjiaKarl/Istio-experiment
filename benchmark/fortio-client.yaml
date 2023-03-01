@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fortio-client
+spec:
+  ports:
+    - name: http-port
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fortio-client
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: test-fortio-client
+  labels:
+    account: fortio-client
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fortio-client
+  labels:
+    app: fortio-client
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fortio-client
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: fortio-client
+        version: v1
+    spec:
+      serviceAccountName: test-fortio-client
+      containers:
+      - name: fortio-client
+        image: fortio-client:v1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+          name: http-port
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        # securityContext:
+        #   runAsUser: 1000
+        command:
+          - sleep
+          - 365d
+      volumes:
+      - name: tmp
+        emptyDir: {}
+          

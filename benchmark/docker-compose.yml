@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  fortio-client:
+    image: fortio-client:v1
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+# eval $(minikube -p minikube docker-env)
+# docker compose build

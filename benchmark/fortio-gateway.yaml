@@ -1,0 +1,49 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: fortio-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: fortio-server
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - fortio-gateway
+  http:
+  - match:
+    - uri:
+        exact: /
+    - uri:
+        exact: /debug
+    - uri:
+        prefix: /fortio/
+    route:
+    - destination:
+        host: fortio-server
+        port:
+          number: 8080
+  - match:
+    - uri:
+        exact: /client/debug
+    - uri:
+        prefix: /client/fortio/
+    rewrite:
+      uri: /fortio/
+    route:
+    - destination:
+        host: fortio-client
+        port:
+          number: 8080

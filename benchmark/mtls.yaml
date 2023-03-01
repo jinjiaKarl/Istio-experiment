@@ -1,0 +1,10 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: "fortio"
+spec:
+  selector:
+    matchLabels:
+      app: fortio-server
+  mtls:
+    mode: STRICT
