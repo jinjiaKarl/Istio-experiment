@@ -38,6 +38,34 @@ spec:
   - match:
     - uri:
         exact: /client/debug
+    rewrite:
+      uri: /debug
+    route:
+    - destination:
+        host: fortio-client
+        port:
+          number: 8080
+  - match:
+    - uri:
+        exact: /client/fortio/rest/run
+    rewrite:
+      uri: /fortio/rest/run
+    route:
+    - destination:
+        host: fortio-client
+        port:
+          number: 8080
+  - match:
+    - uri:
+        exact: /client/fortio/rest/status
+    rewrite:
+      uri: /fortio/rest/status
+    route:
+    - destination:
+        host: fortio-client
+        port:
+          number: 8080
+  - match:
     - uri:
         prefix: /client/fortio/
     rewrite:
